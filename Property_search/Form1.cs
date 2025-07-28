@@ -6,6 +6,7 @@ namespace Property_search
 {
     public partial class Form1 : Form
     {
+        // Конструктор форми
         public Form1()
         {
             InitializeComponent();
@@ -20,6 +21,7 @@ namespace Property_search
 
         }
 
+        // завантаження описів об’єктів нерухомості з таблиці property у ComboBox-и для редагування та видалення
         private void LoadDescriptions()
         {
             editChoseDescription.Items.Clear();
@@ -42,6 +44,7 @@ namespace Property_search
             }
         }
 
+        // ініціалізація даних під час завантаження форми
         private void Form1_Load(object sender, EventArgs e)
         {
             LoadDescriptions();
@@ -53,6 +56,7 @@ namespace Property_search
             LoadGridData();
         }
 
+        // кнопка очищення в групі додавання
         private void addClean_Click(object sender, EventArgs e)
         {
             addDescription.Text = "";
@@ -74,6 +78,7 @@ namespace Property_search
 
         }
 
+        // кнопка очищення в групі редагування
         private void editClean_Click(object sender, EventArgs e)
         {
             editChoseDescription.SelectedIndex = -1;
@@ -98,6 +103,7 @@ namespace Property_search
             label29.Visible = false;
         }
 
+        // кнопка очищення в групі видалення
         private void deleteClean_Click(object sender, EventArgs e)
         {
             deleteChoseDescription.SelectedIndex = -1;
@@ -122,6 +128,7 @@ namespace Property_search
             label42.Visible = false;
         }
 
+        // кнопка очищення в групі пошуку за фільтрами
         private void searchClean_Click(object sender, EventArgs e)
         {
             searchRent.Checked = false;
@@ -140,14 +147,22 @@ namespace Property_search
             searchLandAreaFrom.Text = "";
             searchLandAreaTo.Text = "";
             dataGridView1.DataSource = null;
+            label16.Visible = false;
+            label15.Visible = false;
+            label14.Visible = false;
+            searchLandAreaFrom.Visible = false;
+            searchLandAreaTo.Visible = false;
         }
 
+        //перевірка правильності формату номера телефону
         private bool validPhoneNumber(string phoneNumber)
         {
             string pattern = @"^\+\d{2,3}\s\d{2}\s\d{3}\s\d{4}$";
             return Regex.IsMatch(phoneNumber, pattern);
         }
 
+
+        //метод для перевірки чи всі поля заповнені для групи додавання
         private bool areAddFieldsFilled()
         {
             // основні поля
@@ -157,12 +172,10 @@ namespace Property_search
                 string.IsNullOrWhiteSpace(addPrice.Text) || string.IsNullOrWhiteSpace(addFloor.Text) ||
                 string.IsNullOrWhiteSpace(addLivingArea.Text))
                 return false;
-
             // додаткове поле з дялінкою коли обрано будинок
             if (addProperty.SelectedItem?.ToString() == "Будинок" &&
                 string.IsNullOrWhiteSpace(addLandArea.Text))
                 return false;
-
             // додаткове поле з тваринами коли об'єкт для оренди
             if (addRent.Checked && !addPetsAllowed.Visible)
                 return false;
@@ -170,6 +183,7 @@ namespace Property_search
             return true;
         }
 
+        //перевірка на заповненість полів для групи редагування
         private bool areEditFieldsFilled()
         {
             if (string.IsNullOrWhiteSpace(editDescription.Text) || string.IsNullOrWhiteSpace(editOwner.Text) ||
@@ -188,7 +202,7 @@ namespace Property_search
             return true;
         }
 
-        //видимість необов'язкових полів
+        // видимість необов'язкових полів
         private void SetVisibility(bool visible, params Control[] controls)
         {
             foreach (var ctrl in controls) ctrl.Visible = visible;
@@ -200,7 +214,7 @@ namespace Property_search
             SetVisibility(addRent.Checked, addPetsAllowed);
         }
 
-        //видимість полів з площею ділянки та надписом в групі додавання запису до бд
+        // видимість полів з площею ділянки та надписом в групі додавання запису до бд
         private void addProperty_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (addProperty.SelectedItem != null)
@@ -210,11 +224,13 @@ namespace Property_search
             }
         }
 
+        // видимість поля тварин в групі редагування запису
         private void editRent_CheckedChanged(object sender, EventArgs e)
         {
             SetVisibility(editRent.Checked, editPetsAllowed, label23, editStatus);
         }
 
+        // видимість полів з площею ділянки та надписом в групі редагування запису
         private void editProperty_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (editProperty.SelectedItem != null)
@@ -224,11 +240,13 @@ namespace Property_search
             }
         }
 
+        // видимість поля тварин в групі видалення запису
         private void deleteRent_CheckedChanged(object sender, EventArgs e)
         {
             SetVisibility(deleteRent.Checked, deletePetsAllowed, label49, deleteStatus);
         }
 
+        // видимість полів з площею ділянки та надписом в групі видалення запису
         private void deleteProperty_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (deleteProperty.SelectedItem != null)
@@ -238,13 +256,85 @@ namespace Property_search
             }
         }
 
+        // видимість поля тварин для пошуку записів
+        private void searchRent_CheckedChanged(object sender, EventArgs e)
+        {
+            SetVisibility(searchRent.Checked, searchPetsAllowed);
+        }
+
+        // видимість полів з площею ділянки та надписом в групі пошуку записів
+        private void searchProperty_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (searchProperty.SelectedItem != null)
+            {
+                bool isHouse = searchProperty.SelectedItem.ToString() == "Будинок";
+                SetVisibility(isHouse, searchLandAreaFrom, searchLandAreaTo, label14, label15, label16);
+            }
+        }
+
+        // перевірка полів на цілі числа
+        private bool AreAllInt(params TextBox[] textBoxes)
+        {
+            foreach (var textBox in textBoxes)
+            {
+
+                if (textBox == null || !textBox.Visible || string.IsNullOrWhiteSpace(textBox.Text))
+                    continue;
+
+                if (!int.TryParse(textBox.Text, out _))
+                {
+                    MessageBox.Show($"Поле \"{textBox.Name}\" повинно містити ціле число.");
+                    textBox.Focus();
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // перевірка полів на дійсні числа з не більше ніж 2 знаками після коми
+        private bool AreAllDecimals(params TextBox[] textBoxes)
+        {
+            foreach (var textBox in textBoxes)
+            {
+                if (textBox == null || !textBox.Visible || string.IsNullOrWhiteSpace(textBox.Text))
+                    continue;
+
+                if (decimal.TryParse(textBox.Text, out decimal result))
+                {
+                    if (Decimal.Round(result, 2) != result)
+                    {
+                        string fieldName = textBox.Tag?.ToString() ?? textBox.Name;
+                        MessageBox.Show($"Поле \"{fieldName}\" повинно містити число з не більше ніж двома знаками після коми.");
+                        textBox.Focus();
+                        return false;
+                    }
+                }
+                else
+                {
+                    string fieldName = textBox.Tag?.ToString() ?? textBox.Name;
+                    MessageBox.Show($"Поле \"{fieldName}\" повинно містити дійсне число.");
+                    textBox.Focus();
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // кнопка для додавання запису до бази даних
         private void AddToDatabase_Click(object sender, EventArgs e)
         {
+
             if (!areAddFieldsFilled())
             {
                 MessageBox.Show("Будь ласка, заповніть всі поля!");
                 return;
             }
+
+            if (!AreAllInt(addFloor))
+                return;
+
+            if (!AreAllDecimals(addPrice, addLivingArea, addLandArea.Visible ? addLandArea : null))
+                return;
 
             if (!validPhoneNumber(addNumber.Text))
             {
@@ -323,6 +413,7 @@ namespace Property_search
             }
         }
 
+        // вивід всіх даних для обраного опису нерухомості в групу редагування
         private void editChoseDescription_SelectedIndexChanged(object sender, EventArgs e)
         {
             string selectedDesc = editChoseDescription.SelectedItem?.ToString();
@@ -402,6 +493,7 @@ namespace Property_search
             }
         }
 
+        // кнопка для збереження змін про запис в базі даних
         private void Update_Click(object sender, EventArgs e)
         {
             if (!areEditFieldsFilled())
@@ -409,6 +501,12 @@ namespace Property_search
                 MessageBox.Show("Будь ласка, заповніть всі поля!");
                 return;
             }
+
+            if (!AreAllInt(addFloor))
+                return;
+
+            if (!AreAllDecimals(addPrice, addLivingArea, addLandArea.Visible ? addLandArea : null))
+                return;
 
             if (!validPhoneNumber(editNumber.Text))
             {
@@ -509,6 +607,7 @@ namespace Property_search
             }
         }
 
+        // вивід всіх даних для обраного опису нерухомості в групу видалення
         private void deleteChoseDescription_SelectedIndexChanged(object sender, EventArgs e)
         {
             string selectedDesc = deleteChoseDescription.SelectedItem?.ToString();
@@ -591,6 +690,7 @@ namespace Property_search
             }
         }
 
+        // кнопка для видалення об'єкту
         private void Delete_Click(object sender, EventArgs e)
         {
             string selectedDesc = deleteChoseDescription.SelectedItem?.ToString();
@@ -599,7 +699,7 @@ namespace Property_search
                 MessageBox.Show("Оберіть об'єкт для видалення зі спадного списку!");
                 return;
             }
-
+            
             // підтвердження видалення
             var confirmResult = MessageBox.Show($"Ви впевнені, що хочете видалити об'єкт: \"{selectedDesc}\"?", "Підтвердити видалення", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (confirmResult != DialogResult.Yes)
@@ -655,6 +755,7 @@ namespace Property_search
             }
         }
 
+        // вивід всіх записів у dataGridView2 на вкладці "Керування об'єктами"
         private void LoadGridData()
         {
             using (MySqlConnection conn = DBUtils.GetDBConnection())
@@ -692,6 +793,7 @@ namespace Property_search
             dataGridView2.Columns["land_area"].HeaderText = "Площа ділянки";
         }
 
+        // перевірка правильності діапазону в полях "від" та "до"
         private bool ValidateRange(TextBox fromBox, TextBox toBox, string fieldName)
         {
             int from = 0, to = 0;
@@ -722,6 +824,7 @@ namespace Property_search
             return true;
         }
 
+        // кнопка пошуку записів і виведення записів з бази даних за обраними фільтрами
         private void Search_Click(object sender, EventArgs e)
         {
             using (MySqlConnection conn = DBUtils.GetDBConnection())
@@ -749,6 +852,10 @@ namespace Property_search
                 {
                     conditions.Add("p.operation_type = 'Оренда'");
                     conditions.Add("r.apartment_status = 'Здається'");
+                    if (searchPetsAllowed.Checked)
+                        conditions.Add("r.pets_allow = 1");
+                    else
+                        conditions.Add("r.pets_allow = 0");
                 }
                 else if (searchSale.Checked)
                 {
@@ -819,6 +926,7 @@ namespace Property_search
             }
         }
 
+        // додавання умов для діапазону значень у WHERE запит
         private void AddRangeFilter(string field, TextBox fromBox, TextBox toBox, MySqlCommand cmd, List<string> conditions)
         {
             if (!string.IsNullOrWhiteSpace(fromBox.Text))
@@ -835,21 +943,5 @@ namespace Property_search
                 cmd.Parameters.AddWithValue(param, decimal.Parse(toBox.Text));
             }
         }
-
-        private void searchRent_CheckedChanged(object sender, EventArgs e)
-        {
-            SetVisibility(searchRent.Checked, searchPetsAllowed);
-        }
-
-        private void searchProperty_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (searchProperty.SelectedItem != null)
-            {
-                bool isHouse = searchProperty.SelectedItem.ToString() == "Будинок";
-                SetVisibility(isHouse, searchLandAreaFrom, searchLandAreaTo, label14, label15, label16);
-            }
-        }
-
-
     }
 }

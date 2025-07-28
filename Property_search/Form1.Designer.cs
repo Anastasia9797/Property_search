@@ -441,7 +441,7 @@
             searchRoom.BackColor = Color.MintCream;
             searchRoom.DropDownStyle = ComboBoxStyle.DropDownList;
             searchRoom.FormattingEnabled = true;
-            searchRoom.Items.AddRange(new object[] { "1", "2", "3", "4", "5", "6", "7+" });
+            searchRoom.Items.AddRange(new object[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" });
             searchRoom.Location = new Point(345, 101);
             searchRoom.Name = "searchRoom";
             searchRoom.Size = new Size(181, 28);
@@ -833,7 +833,7 @@
             deleteRoom.DropDownStyle = ComboBoxStyle.DropDownList;
             deleteRoom.Enabled = false;
             deleteRoom.FormattingEnabled = true;
-            deleteRoom.Items.AddRange(new object[] { "1", "2", "3", "4", "5", "6", "7+" });
+            deleteRoom.Items.AddRange(new object[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" });
             deleteRoom.Location = new Point(174, 364);
             deleteRoom.Name = "deleteRoom";
             deleteRoom.Size = new Size(222, 28);
@@ -1186,7 +1186,7 @@
             editRoom.BackColor = Color.MintCream;
             editRoom.DropDownStyle = ComboBoxStyle.DropDownList;
             editRoom.FormattingEnabled = true;
-            editRoom.Items.AddRange(new object[] { "1", "2", "3", "4", "5", "6", "7+" });
+            editRoom.Items.AddRange(new object[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" });
             editRoom.Location = new Point(187, 367);
             editRoom.Name = "editRoom";
             editRoom.Size = new Size(222, 28);
@@ -1370,7 +1370,7 @@
             // AddToDatabase
             // 
             AddToDatabase.BackColor = Color.PaleGreen;
-            AddToDatabase.Location = new Point(32, 621);
+            AddToDatabase.Location = new Point(29, 623);
             AddToDatabase.Name = "AddToDatabase";
             AddToDatabase.Size = new Size(152, 45);
             AddToDatabase.TabIndex = 86;
@@ -1490,7 +1490,7 @@
             addRoom.BackColor = Color.MintCream;
             addRoom.DropDownStyle = ComboBoxStyle.DropDownList;
             addRoom.FormattingEnabled = true;
-            addRoom.Items.AddRange(new object[] { "1", "2", "3", "4", "5", "6", "7+" });
+            addRoom.Items.AddRange(new object[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" });
             addRoom.Location = new Point(171, 303);
             addRoom.Name = "addRoom";
             addRoom.Size = new Size(222, 28);
